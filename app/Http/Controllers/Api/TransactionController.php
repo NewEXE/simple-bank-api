@@ -2,20 +2,27 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Traits\TransactionFilters;
 use App\Models\Transaction;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class TransactionController extends Controller
 {
+    use TransactionFilters;
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Transaction::all();
+        $transactions = $this->getTransactionsByFilters($request)->get();
+
+        return $transactions;
     }
 
     /**
@@ -36,22 +43,43 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        $filteredRequest = $request->only(['date', 'amount']);
+        $filteredRequest = $request->only(['​customerId,', 'amount']);
 
-        $transaction = Transaction::create($filteredRequest);
+        $user = User::findOrFail($request->customerId);
 
-        return response()->json($transaction, 201);
+        $transaction = $user->transactions()->create([
+            'amount' => $request->amount,
+            'date' => '',
+        ]);
+
+        $transactionData = [
+            'transactionId' => $transaction->id,
+            'customerId' => $transaction->user_id,
+            'amount' => $transaction->amount,
+            'date' => $transaction->date,
+        ];
+
+        return response()->json($transactionData, 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Transaction  $transaction
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @param  \App\Models\Transaction $transaction
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
      */
-    public function show(Transaction $transaction)
+    public function show(User $user, Transaction $transaction)
     {
-        return $transaction;
+        $transaction = $user->transactions()->findOrFail($transaction->id);
+
+        $transactionData = [
+            'transactionId' => $transaction->id,
+            'amount' => $transaction->amount,
+            'date' => $transaction->date,
+        ];
+
+        return response()->json($transactionData);
     }
 
     /**
@@ -68,17 +96,24 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Transaction $transaction
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Transaction $transaction)
+    public function update(Request $request)
     {
-        $filteredRequest = $request->only(['date', 'amount']);
+        $transaction = Transaction::findOrFail($request->transactionId);
+        $transaction->amount = $request->amount;
+        $transaction->date = Carbon::now()->format(Transaction::DATE_FORMAT_SET);
+        $transaction->save();
 
-        $transaction->update($filteredRequest);
+        $transactionData = [
+            'transactionId' => $transaction->id,
+            'customerId' => $transaction->user->id,
+            'amount' => $transaction->amount,
+            'date' => $transaction->date,
+        ];
 
-        return response()->json($transaction, 200);
+        return response()->json($transactionData, 200);
     }
 
     /**
@@ -90,8 +125,8 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
-        $transaction->delete();
+        $result = $transaction->delete();
 
-        return response()->json(null, 204);
+        return response()->json((bool) $result, 204);
     }
 }

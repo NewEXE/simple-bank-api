@@ -38,14 +38,9 @@ class UserController extends Controller
     {
         $filteredRequest = $request->only(['name', 'cnp']);
 
-        $user = new User($filteredRequest);
-        $unhashedPassword = $user->generatePassword();
+        $user = User::create($filteredRequest);
 
-        $userData = array_merge($user->toArray(), ['unhashed_password' => $unhashedPassword]);
-
-        return response()->json([
-            'data' => $userData
-        ], 201);
+        return response()->json($user->id);
     }
 
     /**

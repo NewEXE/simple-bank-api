@@ -17,11 +17,17 @@ use Illuminate\Http\Request;
 Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout');
 
-Route::group(['middleware' => 'auth:api'], function() {
+Route::resource('/users', 'Api\UserController');
+
+Route::group(['middleware' => 'api'], function() {
     Route::get('/user', function (Request $request) {
         return Auth::guard('api')->user();
     });
 
-    Route::resource('/transactions', 'Api\TransactionController');
-    Route::resource('/users', 'Api\UserController');
+    Route::get('transactions', 'Api\TransactionController@index');
+    Route::get('transactions/{user}/{transaction}', 'Api\TransactionController@show');
+    Route::post('transactions', 'Api\TransactionController@store');
+    Route::put('transactions', 'Api\TransactionController@update');
+    Route::delete('transactions/{transaction}', 'Api\TransactionController@destroy');
+
 });

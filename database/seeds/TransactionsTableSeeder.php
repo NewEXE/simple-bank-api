@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Schema;
+use App\Models\User;
 
 class TransactionsTableSeeder extends Seeder
 {
@@ -19,14 +20,17 @@ class TransactionsTableSeeder extends Seeder
 
             $faker = \Faker\Factory::create();
 
+            $user = User::findOrFail(1);
+
             for ($i = 0; $i < 50; $i++)
             {
-                $transaction = new Transaction();
+                $date = $faker->date();
+                $amount = $faker->randomFloat(2, 1, 255);
 
-                $transaction->date = $faker->date();
-                $transaction->amount = $faker->randomFloat(2, 1, 255);
-
-                $transaction->save();
+                $user->transactions()->create([
+                    'date' => $date,
+                    'amount' => $amount,
+                ]);
             }
         }
     }

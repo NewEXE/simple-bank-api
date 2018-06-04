@@ -14,13 +14,11 @@ class UsersTableSeeder extends Seeder
     {
         User::truncate();
 
-        $password = Hash::make('secret');
         $cnp = str_random(60);
 
         User::create([
             'name' => 'Administrator',
             'cnp' => $cnp,
-            'password' => $password,
         ]);
 
 //        $faker = \Faker\Factory::create();

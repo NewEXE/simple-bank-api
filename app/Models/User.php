@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'password', 'cnp'
+        'name', 'cnp'
     ];
 
     /**
@@ -25,20 +25,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'remember_token',
     ];
-
-    /**
-     * @return string
-     */
-    public function generatePassword()
-    {
-        $unhashedPassword = str_random(14);
-        $this->password = Hash::make($unhashedPassword);
-        $this->save();
-
-        return $unhashedPassword;
-    }
 
     /**
      * @return string
@@ -60,5 +48,13 @@ class User extends Authenticatable
         $this->save();
 
         return $this->cnp;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

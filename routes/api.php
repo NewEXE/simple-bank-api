@@ -17,7 +17,7 @@ Route::name('api.')->group(function () {
     Route::post('login', 'Auth\LoginController@login')->name('user.login');
     Route::post('logout', 'Auth\LoginController@logout')->name('user.logout');
 
-    Route::group(['middleware' => 'api'], function() {
+    Route::group(['middleware' => 'auth:api'], function() {
         Route::get('/user', function (Request $request) {
             return Auth::guard('api')->user();
         });

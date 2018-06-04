@@ -20,7 +20,7 @@ trait TransactionFilters
 {
     /**
      * @param Request $request
-     * @return Transaction
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function getTransactionsByFilters(Request $request) {
 

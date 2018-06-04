@@ -12,22 +12,21 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::name('api.')->group(function () {
+    Route::post('register-user', 'Api\UserController@store')->name('user.register');
+    Route::post('login', 'Auth\LoginController@login')->name('user.login');
+    Route::post('logout', 'Auth\LoginController@logout')->name('user.logout');
 
-//Route::post('register', 'Auth\RegisterController@register');
-Route::post('login', 'Auth\LoginController@login');
-Route::post('logout', 'Auth\LoginController@logout');
+    Route::group(['middleware' => 'api'], function() {
+        Route::get('/user', function (Request $request) {
+            return Auth::guard('api')->user();
+        });
 
-Route::resource('/users', 'Api\UserController');
+        Route::get('transactions', 'Api\TransactionController@index')->name('transactions.index');
+        Route::get('transactions/{user}/{transaction}', 'Api\TransactionController@show');
+        Route::post('transactions', 'Api\TransactionController@store');
+        Route::put('transactions', 'Api\TransactionController@update');
+        Route::delete('transactions/{transaction}', 'Api\TransactionController@destroy');
 
-Route::group(['middleware' => 'api'], function() {
-    Route::get('/user', function (Request $request) {
-        return Auth::guard('api')->user();
     });
-
-    Route::get('transactions', 'Api\TransactionController@index');
-    Route::get('transactions/{user}/{transaction}', 'Api\TransactionController@show');
-    Route::post('transactions', 'Api\TransactionController@store');
-    Route::put('transactions', 'Api\TransactionController@update');
-    Route::delete('transactions/{transaction}', 'Api\TransactionController@destroy');
-
 });

@@ -38,6 +38,9 @@ class Transaction extends BaseModel
         }
     }
 
+    /**
+     * @return mixed
+     */
     public static function getYesterdayAmountSum() {
         $sum = self::whereBetween('date', [
             Carbon::yesterday()->format(self::DATE_FORMAT_SET),

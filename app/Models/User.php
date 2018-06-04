@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -15,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'password', 'cnp'
     ];
 
     /**
@@ -30,11 +31,34 @@ class User extends Authenticatable
     /**
      * @return string
      */
+    public function generatePassword()
+    {
+        $unhashedPassword = str_random(14);
+        $this->password = Hash::make($unhashedPassword);
+        $this->save();
+
+        return $unhashedPassword;
+    }
+
+    /**
+     * @return string
+     */
     public function generateToken()
     {
         $this->api_token = str_random(60);
         $this->save();
 
         return $this->api_token;
+    }
+
+    /**
+     * @return string
+     */
+    public function generateCnp()
+    {
+        $this->cnp = str_random(60);
+        $this->save();
+
+        return $this->cnp;
     }
 }

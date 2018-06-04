@@ -36,7 +36,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $filteredRequest = $request->only(['name', 'cnp']);
+
+        $user = new User($filteredRequest);
+        $unhashedPassword = $user->generatePassword();
+
+        $userData = array_merge($user->toArray(), ['unhashed_password' => $unhashedPassword]);
+
+        return response()->json([
+            'data' => $userData
+        ], 201);
     }
 
     /**

@@ -21,3 +21,8 @@ Tested on Vagrant 2.0.2, Homestead 5.2.0, Ubuntu 16.04.
 
 # Used libs
 ixudra cURL library: https://github.com/ixudra/curl
+
+# Unrealized features (for now)
+1. Unit-tests;
+2. All cUrl methods in Services/InternalApi;
+3. views code cleanup.

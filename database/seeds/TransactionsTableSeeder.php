@@ -24,7 +24,7 @@ class TransactionsTableSeeder extends Seeder
 
             for ($i = 0; $i < 50; $i++)
             {
-                $date = $faker->date();
+                $date = $faker->date(Transaction::DATE_FORMAT_SET);
                 $amount = $faker->randomFloat(2, 1, 255);
 
                 $user->transactions()->create([

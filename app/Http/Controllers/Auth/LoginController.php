@@ -34,13 +34,17 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/home';
 
+    protected $wantsJson = false;
+
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param Request $request
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
+        if ($request->wantsJson()) $this->wantsJson = true;
+
         $this->middleware('guest')->except('logout');
     }
 
@@ -59,18 +63,19 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        if ($request->wantsJson()) {
-            $this->validateLogin($request);
+        if ($this->wantsJson) {
 
-            if ($this->attemptLogin($request)) {
+            $name = $request->input($this->username());
+            $cnp = $request->input('cnp');
 
-                /** @var User $user */
-                $user = $this->guard()->user();
+            if ($user = $this->checkApiCredentials($name, $cnp)) {
+
+                $this->guard()->login($user, false);
 
                 $user->generateToken();
 
                 return response()->json([
-                    'data' => $user->toArray(),
+                    'api_token' => $user->api_token,
                 ]);
             }
 
@@ -86,7 +91,7 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        if ($request->wantsJson()) {
+        if ($this->wantsJson) {
             /** @var User|null $user */
             $user = Auth::guard('api')->user();
 
@@ -101,5 +106,15 @@ class LoginController extends Controller
         }
 
         return $this->traitLogout($request);
+    }
+
+    /**
+     * @param $name
+     * @param $cnp
+     * @return User|null
+     */
+    protected function checkApiCredentials($name, $cnp)
+    {
+        return User::where('name', $name)->where('cnp', $cnp)->first();
     }
 }

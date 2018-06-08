@@ -9,10 +9,19 @@ use Carbon\Carbon;
  */
 class Transaction extends BaseModel
 {
+    /**
+     * @var array
+     */
     protected $fillable = ['amount', 'date'];
 
+    /**
+     * @var string
+     */
     const DATE_FORMAT_SET = 'Y-m-d';
 
+    /**
+     * @var string
+     */
     const DATE_FORMAT_GET = 'd.m.Y';
 
     /**
@@ -28,14 +37,7 @@ class Transaction extends BaseModel
      */
     public function setDateAttribute($value)
     {
-        $format = self::DATE_FORMAT_SET;
-
-        if (empty($value)) {
-            $this->attributes['date'] = Carbon::now()->format($format);
-        } else {
-            $carbon = new Carbon($value);
-            $this->attributes['date'] = $carbon->format($format);
-        }
+        $this->attributes['date'] = Carbon::parse($value)->format(self::DATE_FORMAT_SET);
     }
 
     /**
@@ -56,8 +58,7 @@ class Transaction extends BaseModel
      */
     public function getDateAttribute($value)
     {
-        $carbon = new Carbon($value);
-        return $carbon->format(self::DATE_FORMAT_GET);
+        return Carbon::parse($value)->format(self::DATE_FORMAT_GET);
     }
 
     /**

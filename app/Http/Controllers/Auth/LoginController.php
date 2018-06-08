@@ -44,11 +44,19 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    /**
+     * @return string
+     */
     public function username()
     {
         return 'name';
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function login(Request $request)
     {
         if ($request->wantsJson()) {
@@ -70,14 +78,6 @@ class LoginController extends Controller
         }
 
         return $this->traitLogin($request);
-    }
-
-    protected function validateLogin(Request $request)
-    {
-        $this->validate($request, [
-            $this->username() => 'required|string',
-            'password' => 'required|string',
-        ]);
     }
 
     /**

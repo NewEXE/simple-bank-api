@@ -23,6 +23,8 @@ class InternalApi
         $response = Curl::to(route('api.transactions.index'))->get();
         $response = json_decode($response);
 
+        if (! $response) $response = [];
+
         return $response;
     }
 

@@ -31,7 +31,6 @@ class RegisterTest extends TestCase
         $credentials = compact('name', 'cnp');
 
         $this->json('POST', route('api.user.register'), $credentials)
-            ->assertStatus(201)
-            ->assertSuccessful(1, [1]);
+            ->assertStatus(201);
     }
 }

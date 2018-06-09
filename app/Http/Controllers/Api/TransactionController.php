@@ -65,6 +65,7 @@ class TransactionController extends Controller
 
         $transactionData = [
             'transactionId' => $transaction->id,
+            'customerId' => $transaction->user->id,
             'amount' => $transaction->amount,
             'date' => $transaction->date,
         ];
@@ -81,8 +82,10 @@ class TransactionController extends Controller
     public function update(Request $request)
     {
         $transaction = Transaction::findOrFail($request->transactionId);
+
         $transaction->amount = $request->amount;
         $transaction->date = Carbon::now()->format(Transaction::DATE_FORMAT_SET);
+
         $transaction->save();
 
         $transactionData = [

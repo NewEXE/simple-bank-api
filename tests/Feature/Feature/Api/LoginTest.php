@@ -1,12 +1,14 @@
 <?php
 
-namespace Tests\Feature\Feature;
+namespace Tests\Feature\Feature\Api;
 
 use App\Models\User;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
+/**
+ * Class LoginTest
+ * @package Tests\Feature\Feature
+ */
 class LoginTest extends TestCase
 {
     /**
@@ -26,14 +28,9 @@ class LoginTest extends TestCase
      */
     public function testUserLoginsSuccessfully()
     {
-        $name = str_random();
-        $cnp = str_random(60);
+        factory(User::class)->create($this->credentials);
 
-        $credentials = compact('name', 'cnp');
-
-        $user = factory(User::class)->create($credentials);
-
-        $this->json('POST', route('api.user.login'), $credentials)
+        $this->json('POST', route('api.user.login'), $this->credentials)
             ->assertStatus(200)
             ->assertJsonStructure([
                 'api_token'

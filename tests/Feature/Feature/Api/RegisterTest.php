@@ -1,11 +1,15 @@
 <?php
 
-namespace Tests\Feature\Feature;
+namespace Tests\Feature\Feature\Api;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+/**
+ * Class RegisterTest
+ * @package Tests\Feature\Feature
+ */
 class RegisterTest extends TestCase
 {
     /**
@@ -25,12 +29,7 @@ class RegisterTest extends TestCase
      */
     public function testRegistersSuccessfully()
     {
-        $name = str_random();
-        $cnp = str_random(60);
-
-        $credentials = compact('name', 'cnp');
-
-        $this->json('POST', route('api.user.register'), $credentials)
-            ->assertStatus(201);
+        $this->json('POST', route('api.user.register'), $this->credentials)
+            ->assertStatus(201); //todo assertJsonCount
     }
 }

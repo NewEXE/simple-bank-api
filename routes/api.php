@@ -23,10 +23,9 @@ Route::name('api.')->group(function () {
         });
 
         Route::get('transactions', 'Api\TransactionController@index')->name('transactions.index');
-        Route::get('transactions/{user}/{transaction}', 'Api\TransactionController@show');
-        Route::post('transactions', 'Api\TransactionController@store');
-        Route::put('transactions', 'Api\TransactionController@update');
-        Route::delete('transactions/{transaction}', 'Api\TransactionController@destroy');
-
+        Route::get('transactions/{user}/{transaction}', 'Api\TransactionController@show')->name('transactions.show');
+        Route::post('transactions', 'Api\TransactionController@store')->name('transactions.store');
+        Route::put('transactions', 'Api\TransactionController@update')->name('transactions.update');
+        Route::delete('transactions/{transaction}', 'Api\TransactionController@destroy')->name('transactions.destroy');
     });
 });

@@ -3,8 +3,6 @@
 namespace Tests\Feature\Feature\Api;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
  * Class RegisterTest
@@ -19,8 +17,8 @@ class RegisterTest extends TestCase
     {
         $this->json('POST', route('api.user.register'))
             ->assertStatus(422)
-            ->assertJson([
-                'message' => 'The given data was invalid.'
+            ->assertJsonStructure([
+                'message', 'errors'
             ]);
     }
 
@@ -29,7 +27,9 @@ class RegisterTest extends TestCase
      */
     public function testRegistersSuccessfully()
     {
-        $this->json('POST', route('api.user.register'), $this->credentials)
-            ->assertStatus(201); //todo assertJsonCount
+        $response = $this->json('POST', route('api.user.register'), $this->credentials)
+            ->assertStatus(201);
+
+        $this->assertTrue(is_numeric($response->getContent()));
     }
 }

@@ -18,8 +18,8 @@ class LoginTest extends TestCase
     {
         $this->json('POST', route('api.user.login'))
             ->assertStatus(422)
-            ->assertJson([
-                'message' => 'The given data was invalid.'
+            ->assertJsonStructure([
+                'message', 'errors'
             ]);
     }
 

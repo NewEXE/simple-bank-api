@@ -34,7 +34,7 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/home';
 
-    protected $wantsJson = false;
+    protected $isApiAuth = false;
 
     /**
      * Create a new controller instance.
@@ -43,7 +43,7 @@ class LoginController extends Controller
      */
     public function __construct(Request $request)
     {
-        if ($request->wantsJson()) $this->wantsJson = true;
+        if ($request->wantsJson()) $this->isApiAuth = true;
 
         $this->middleware('guest')->except('logout');
     }
@@ -63,7 +63,7 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        if ($this->wantsJson) {
+        if ($this->isApiAuth) {
 
             $name = $request->input($this->username());
             $cnp = $request->input('cnp');
@@ -91,7 +91,7 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        if ($this->wantsJson) {
+        if ($this->isApiAuth) {
             /** @var User|null $user */
             $user = Auth::guard('api')->user();
 

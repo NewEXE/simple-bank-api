@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\Traits\TransactionFilters;
+use App\Http\Requests\Api\Transaction\TransactionDestroyRequest;
+use App\Http\Requests\Api\Transaction\TransactionIndexRequest;
+use App\Http\Requests\Api\Transaction\TransactionShowRequest;
+use App\Http\Requests\Api\Transaction\TransactionStoreRequest;
+use App\Http\Requests\Api\Transaction\TransactionUpdateRequest;
 use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class TransactionController extends Controller
@@ -16,9 +20,10 @@ class TransactionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param TransactionIndexRequest $request
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function index(Request $request)
+    public function index(TransactionIndexRequest $request)
     {
         $transactions = $this->getTransactionsByFilters($request)->get();
 
@@ -28,13 +33,11 @@ class TransactionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param TransactionStoreRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TransactionStoreRequest $request)
     {
-        $filteredRequest = $request->only(['​customerId,', 'amount']);
-
         $user = User::findOrFail($request->customerId);
 
         $transaction = $user->transactions()->create([
@@ -55,11 +58,12 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param TransactionShowRequest $request
      * @param User $user
      * @param  \App\Models\Transaction $transaction
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
      */
-    public function show(User $user, Transaction $transaction)
+    public function show(TransactionShowRequest $request, User $user, Transaction $transaction)
     {
         $transaction = $user->transactions()->findOrFail($transaction->id);
 
@@ -76,10 +80,10 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param TransactionUpdateRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(TransactionUpdateRequest $request)
     {
         $transaction = Transaction::findOrFail($request->transactionId);
 
@@ -101,11 +105,12 @@ class TransactionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param TransactionDestroyRequest $request
      * @param  \App\Models\Transaction $transaction
      * @return \Illuminate\Http\Response
      * @throws \Exception
      */
-    public function destroy(Transaction $transaction)
+    public function destroy(TransactionDestroyRequest $request, Transaction $transaction)
     {
         $result = $transaction->delete();
 

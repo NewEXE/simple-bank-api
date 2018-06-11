@@ -20,7 +20,9 @@ class InternalApiServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->user = User::findOrFail(1);
+        if (\Schema::hasTable('users')) {
+            $this->user = User::findOrFail(1);
+        }
     }
 
     /**

@@ -111,7 +111,7 @@ class TransactionTest extends TestCase
 
         $this->json(
             'DELETE',
-            route('api.transactions.destroy', ['transaction'=>$transaction->id]),
+            route('api.transactions.destroy', ['transactionId'=>$transaction->id]),
             [],
             $headers)
             ->assertStatus(204);

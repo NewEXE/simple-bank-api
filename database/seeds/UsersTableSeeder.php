@@ -22,15 +22,5 @@ class UsersTableSeeder extends Seeder
             'cnp' => $cnp,
             'password' => $password
         ]);
-
-//        $faker = \Faker\Factory::create();
-
-//        for ($i = 0; $i < 10; $i++) {
-//            User::create([
-//                'name' => $faker->name,
-//                'email' => $faker->email,
-//                'password' => $password,
-//            ]);
-//        }
     }
 }

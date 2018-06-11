@@ -40,8 +40,8 @@ class InternalApi
     /**
      * @return array Transactions list
      */
-    public function getAllTransactions() {
-
+    public function getAllTransactions()
+    {
         $response = Curl::to(route('api.transactions.index'))
             ->asJson()
             ->withHeaders(['Accept: application/json'])
@@ -60,8 +60,8 @@ class InternalApi
      * @param $cnp
      * @return int|false Customer's ID or false
      */
-    public function addCustomer($name, $cnp) {
-
+    public function addCustomer($name, $cnp)
+    {
         $response = Curl::to(route('api.user.register'))
             ->asJson()
             ->withHeaders(['Accept: application/json'])
@@ -82,7 +82,8 @@ class InternalApi
      * @param $cnp
      * @return string|false Api token or false
      */
-    public function login($name, $cnp) {
+    public function login($name, $cnp)
+    {
         $response = Curl::to(route('api.user.login'))
             ->asJson()
             ->withHeaders(['Accept: application/json'])

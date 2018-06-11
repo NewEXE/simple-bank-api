@@ -2,11 +2,17 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Services\InternalApi;
 use Illuminate\Support\ServiceProvider;
 
 class InternalApiServiceProvider extends ServiceProvider
 {
+    /**
+     * @var User
+     */
+    protected $user;
+
     /**
      * Bootstrap services.
      *
@@ -14,7 +20,7 @@ class InternalApiServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->user = User::findOrFail(1);
     }
 
     /**
@@ -25,7 +31,7 @@ class InternalApiServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('internal_api', function () {
-            return new InternalApi();
+            return new InternalApi($this->user);
         });
     }
 }

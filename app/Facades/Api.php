@@ -11,7 +11,7 @@ namespace App\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * Class HMACHasher
+ * Class Api
  * @package App\Facades
  */
 class Api extends Facade

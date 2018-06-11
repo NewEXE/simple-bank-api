@@ -33,11 +33,24 @@ class Transaction extends BaseModel
     }
 
     /**
+     * Set the transaction's date.
+     *
      * @param $value
      */
     public function setDateAttribute($value)
     {
         $this->attributes['date'] = Carbon::parse($value)->format(self::DATE_FORMAT_SET);
+    }
+
+    /**
+     * Get the transaction's date.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function getDateAttribute($value)
+    {
+        return Carbon::parse($value)->format(self::DATE_FORMAT_GET);
     }
 
     /**
@@ -50,15 +63,6 @@ class Transaction extends BaseModel
         ])->sum('amount');
 
         return $sum;
-    }
-
-    /**
-     * @param $value
-     * @return string
-     */
-    public function getDateAttribute($value)
-    {
-        return Carbon::parse($value)->format(self::DATE_FORMAT_GET);
     }
 
     /**

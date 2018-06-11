@@ -53,7 +53,7 @@ class Handler extends ExceptionHandler
             $request->wantsJson())
         {
             return response()->json([
-                'data' => 'Resource not found'
+                'errors' => 'Resource not found'
             ], 404);
         }
 

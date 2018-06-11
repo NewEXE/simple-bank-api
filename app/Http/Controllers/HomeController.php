@@ -23,9 +23,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-//        $newUser = Api::AddCustomer('Vasya', '4qlGROCv4CGDb6zQ');
-
-
         $transactions = Api::getAllTransactions();
 
         return view('home', compact('transactions', 'users'));

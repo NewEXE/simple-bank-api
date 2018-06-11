@@ -10,12 +10,27 @@ use App\Http\Requests\Api\Transaction\TransactionStoreRequest;
 use App\Http\Requests\Api\Transaction\TransactionUpdateRequest;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Repositories\Api\TransactionRepository;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 
 class TransactionController extends Controller
 {
     use TransactionFilters;
+
+    /**
+     * @var TransactionRepository
+     */
+    protected $transactions;
+
+    /**
+     * TransactionController constructor.
+     * @param TransactionRepository $repository
+     */
+    public function __construct(TransactionRepository $repository)
+    {
+        $this->transactions = $repository;
+    }
 
     /**
      * Display a listing of the transactions.
